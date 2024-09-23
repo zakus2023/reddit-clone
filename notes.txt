@@ -1,0 +1,8 @@
+Pre-requisites
+1. aws cli on the windows machine/or deve machine
+2. terraform installed on machine/local
+3. vs code if neccessary
+
+On the desktop create a folder called reddis-clone-resources and inside the folder create a folder called Jenkins-SonarQube-VM
+
+
