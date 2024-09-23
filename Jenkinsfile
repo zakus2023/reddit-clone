@@ -62,5 +62,19 @@ pipeline {
                 // Runs a file system security scan using Trivy and outputs the results to a file called "trivyfs.txt".
             }
         }
+         stage("Build & Push Docker Image") {
+             steps {
+                 script {
+                     docker.withRegistry('',DOCKER_PASS) {
+                         docker_image = docker.build "${IMAGE_NAME}"
+                     }
+                     docker.withRegistry('',DOCKER_PASS) {
+                         docker_image.push("${IMAGE_TAG}")
+                         docker_image.push('latest')
+                     }
+                 }
+             }
+         }
+        
     }
 }
