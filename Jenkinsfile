@@ -14,6 +14,7 @@ pipeline {
         DOCKER_PASS = 'docker'               // Stores the Docker password (typically should be securely stored).
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"  // Defines the Docker image name based on the Docker user and app name.
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"  // Creates a tag for the Docker image, combining release version and build number.
+        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
 
     stages {
@@ -90,7 +91,13 @@ pipeline {
                  }
              }
          }
-        
+         stage("Trigger CD Pipeline") {
+            steps {
+                script {
+                    sh "curl -v -k --user clouduser:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-184-73-106-172.compute-1.amazonaws.com:8080/job/Reddit-Clone-CD/buildWithParameters?token=gitops-token'"
+                }
+            }
+         }
     }
      post {
         always {
